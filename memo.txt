@@ -108,3 +108,103 @@ JSX 코드를 브라우저가 이해할수 있게 변환
   </script>
 
 
+
+#3 State
+
+state는 데이터가 저장되는 곳
+렌더링하는 방법 2가지
+
+1. 안좋은 방법
+const Container = () => (
+      <div>
+        <h3>Total Clicks : {counter}</h3>
+        <button onClick={countUp}>Click me</button>
+      </div>
+    );
+컴포넌트 수정
+UI에 적용 안되는데, 렌더링을 한번만 하기 떄문
+function countUp() {
+      counter += 1;
+      render();
+    }
+    function render() {
+      ReactDOM.createRoot(root).render(<Container />);
+    }
+    const Container = () => (
+      <div>
+        <h3>Total Clicks : {counter}</h3>
+        <button onClick={countUp}>Click me</button>
+      </div>
+    );
+    render();
+이렇게 어려운 방법으로 리렌더링 가능
+
+리액트의 장점 중 하나는
+컴포넌트를 비교해서 업데이트 되는 부분만 변경해줌
+
+여기서 문제가 있는데 데이터가 바뀔때마다 이 함수를 호출해야함
+
+ㅁ State
+const [] = React.useState();
+useState는 array를 제공함
+첫요소는 현재의값, 두번째는 modifier함수
+
+state를 활용해보자
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+      const data = React.useState();
+      return (
+        <div>
+          <h3>Total Clicks : 0</h3>
+          <button>Click me</button>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(root).render(<App />);
+  </script>
+
+data를 콘솔로 찍어보면 data랑 함수를 배열로 확인 가능
+[undefined, f]
+여기서 함수는 data의 값을 바꿀수있음
+
+ㅁ 함수가 필요한 이유
+function App() {
+      const [counter, setCounter] = React.useState(0);
+      const onClick = () => {
+        setCounter(counter + 1);
+      };
+      return (
+        <div>
+          <h3>Total Clicks : {counter}</h3>
+          <button onClick={onClick}>Click me</button>
+        </div>
+      );
+    }
+
+setCounter로 data(state)가 업뎃될때(컴포넌트의 state를 바꿀때) 
+재렌더링이 됨
+데이터가 바뀔때마다 컴포넌트를 리렌더링, UI를 리프레시함
+
+
+ㅁ State function
+이전 단계의 state를 이용해서 현재 state를 바꾸려했지만,
+결과가 다르게 나올수있음
+
+state의 세팅 방법은 두가지 있음
+1. state의 함수에 원하는 값을 입력
+2. 이전 값을 이용해서 현재 값을 계산함
+const [counter, setCounter] = React.useState(0);
+      const onClick = () => {
+        // setCounter(counter + 1);
+        // 첫번째 인자는 현재값, 그리고 리턴이 새로운 state
+        setCounter((current) => current + 1);
+      };
+
+
+ㅁ unit conversion
+JSX는 html과 다른점이 몇가지 있음
+class -> className
+for -> htmlFor
+이런식
+
